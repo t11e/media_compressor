@@ -1,0 +1,4 @@
+Custom build system to rebundle the YUI Compressor so that is uses a custom
+Rhino in a unique package and thus avoids any classpath issues.
+
+Adapted from the Liferay project (http://www.liferay.com).

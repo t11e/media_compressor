@@ -1,0 +1,41 @@
+mediaRootDir: src/web/
+outputDir: build/
+tempDir: .test_temp_dir
+checkIntervalMs: 0
+groups:
+    - groupName: example_css
+      mediaType: css
+      outputFileName: example.css
+      outputFileNameMinified: example.min.css
+      sourceFileNames:
+        - css/example/common.css
+        - css/example/main.css
+        - css/example/local.css
+
+    - groupName: example_css_ie
+      mediaType: css
+      outputFileName: example_ie6.css
+      outputFileNameMinified: example_ie6.min.css
+      sourceFileNames:
+        - css/example/ie6.css
+
+    - groupName: example_js
+      mediaType: js
+      outputFileName: example.js
+      outputFileNameMinified: example.min.js
+      sourceFileNames:
+        - js/example1.js
+        - js/example2.js
+        - js/example3.js
+
+jslintOptions:
+    - bitwise
+    - eqeqeq
+    - forin
+    - immed
+    - indent=4
+    - newcap
+    - nomen
+    - passfail
+    - regexp
+    - white

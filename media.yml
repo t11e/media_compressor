@@ -1,0 +1,55 @@
+# The original CSS/JS file source directory
+mediaRootDir: src/web
+# The directory into which the compressed files will be placed
+# relative to mediaRootDir
+outputDir: build
+# The temporary directory where pre-compressed files are stored
+tempDir: build.ant/compressed
+# Optional property. Defaults to 10000 (10 seconds)
+# checkIntervalMs: 10000
+groups:
+    - groupName: example_css
+      mediaType: css
+      outputFileName: example.css
+      outputFileNameMinified: example.min.css
+      sourceFileNames:
+        - css/example1.css
+        - css/example2.css
+
+    - groupName: example_js
+      mediaType: js
+      outputFileName: example.js
+      outputFileNameMinified: example.min.js
+      sourceFileNames:
+        - js/example1.js
+        - js/example2.js
+
+jslintOptions:
+    #- adsafe
+    - bitwise
+    #- browser
+    #- cap
+    #- css
+    #- debug
+    - eqeqeq
+    #- evil
+    - forin
+    #- fragment
+    - immed
+    - indent=4
+    #- laxbreak
+    - newcap
+    - nomen
+    #- on
+    #- onevar
+    - passfail
+    #- plusplus
+    - regexp
+    #- safe
+    #- sidebar
+    #- strict
+    #- sub
+    #- undef
+    - white
+    #- widget
+

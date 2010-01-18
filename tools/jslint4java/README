@@ -1,0 +1,2 @@
+Custom build system to rebundle jsint4java from a binary distribution,
+stripping out any dependent jars (junit, hamcrest, ant, rhino).

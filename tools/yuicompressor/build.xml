@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  Adapted from the liferay portal-impl.
+
+  http://svn.liferay.com/browse/portal/trunk/portal-impl/build.xml?r=44044&@annm=none
+-->
+<project name="YUI Compressor Wrapper" default="rebundle">
+    <property name="class.prefix" value="com.t11e.yuicompressor"/>
+    <property name="path.prefix" value="com/t11e/yuicompressor"/>
+    <property name="jar.suffix" value="t11e"/>
+
+    <property name="yuicompressor" value="yuicompressor-2.4.2"/>
+    <property name="rhino" value="rhino1_6R7"/>
+
+    <target name="rebundle">
+        <delete file="${rhino}-${jar.suffix}.jar"/>
+        <delete file="${yuicompressor}-${jar.suffix}.jar"/>
+        <delete dir="scratch"/>
+        <mkdir dir="scratch"/>
+        <unzip src="${rhino}.zip" dest="scratch"/>
+        <unzip src="${yuicompressor}.zip" dest="scratch"/>
+        <move todir="scratch/${rhino}/src/org">
+            <fileset dir="scratch/${yuicompressor}/src/org" includes="**/*.java"/>
+        </move>
+        <move file="scratch/${rhino}/deprecatedsrc/org/mozilla" todir="scratch/${rhino}/deprecatedsrc/${path.prefix}" />
+        <move file="scratch/${rhino}/src/org/mozilla" todir="scratch/${rhino}/src/${path.prefix}" />
+        <move file="scratch/${rhino}/toolsrc/org/mozilla" todir="scratch/${rhino}/toolsrc/${path.prefix}" />
+        <move file="scratch/${rhino}/xmlimplsrc/org/mozilla" todir="scratch/${rhino}/xmlimplsrc/${path.prefix}" />
+        <move file="scratch/${yuicompressor}/src/com/yahoo" todir="scratch/${yuicompressor}/src/${path.prefix}" />
+        <replace dir="scratch" includes="**/build.xml,**/*.java,**/*.properties">
+            <replacefilter token="com.yahoo" value="${class.prefix}.yahoo" />
+            <replacefilter token="org.mozilla" value="${class.prefix}.mozilla" />
+            <replacefilter token="org/mozilla" value="${path.prefix}/mozilla" />
+        </replace>
+        <replace dir="scratch/${rhino}" includes="**/build.xml">
+            <replacetoken><![CDATA[includes="org/]]></replacetoken>
+            <replacevalue><![CDATA[includes="com/]]></replacevalue>
+        </replace>
+        <replace dir="scratch/${rhino}" includes="**/build.xml">
+            <replacetoken><![CDATA[excludes="org/]]></replacetoken>
+            <replacevalue><![CDATA[excludes="com/]]></replacevalue>
+        </replace>
+        <!-- If you updgrade to a more recent version of yuicompressor than
+            2.4.2 the following replacements may need to be changed.
+        -->
+        <replace file="scratch/${yuicompressor}/build.xml">
+            <replacetoken><![CDATA[<unjar src="${lib.dir}/jargs-1.0.jar" dest="${build.dir}/jar"/>]]></replacetoken>
+            <replacevalue></replacevalue>
+        </replace>
+        <replace file="scratch/${yuicompressor}/build.xml">
+            <replacetoken><![CDATA[<unjar src="${lib.dir}/rhino-1.6R7.jar" dest="${build.dir}/jar"/>]]></replacetoken>
+            <replacevalue></replacevalue>
+        </replace>
+        <ant dir="scratch/${rhino}" target="jar" inheritAll="false" />
+        <copy file="scratch/${rhino}/build/${rhino}/js.jar" tofile="scratch/${yuicompressor}/lib/rhino-1.6R7.jar" />
+        <ant dir="scratch/${yuicompressor}" target="build.jar" inheritAll="false" />
+        <move file="scratch/${rhino}/build/${rhino}/js.jar" tofile="${rhino}-${jar.suffix}.jar" />
+        <move file="scratch/${yuicompressor}/build/${yuicompressor}.jar" tofile="${yuicompressor}-${jar.suffix}.jar" />
+        <delete dir="scratch" />
+    </target>
+</project>

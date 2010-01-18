@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Media Compressor" default="jar">
+    <target name="clean">
+        <delete dir="build.ant"/>
+        <delete dir="src/web/build"/>
+    </target>
+
+    <path id="build.classpath">
+      <fileset dir="lib">
+        <include name="*.jar"/>
+        <exclude name="*-sources.jar"/>
+        <exclude name="*-src.jar"/>
+      </fileset>
+    </path>
+
+    <target name="compile">
+        <mkdir dir="build.ant/main"/>
+        <javac destdir="build.ant/main" target="1.6" debug="true">
+            <src path="src/java/main"/>
+            <classpath refid="build.classpath"/>
+        </javac>
+        <mkdir dir="build.ant/test"/>
+        <javac destdir="build.ant/test" target="1.6" debug="true">
+            <src path="src/java/test"/>
+            <classpath path="build.ant/main"/>
+            <classpath refid="build.classpath"/>
+        </javac>
+    </target>
+
+    <target name="test" depends="compile">
+        <delete dir="build.ant/junit"/>
+        <delete dir="build.ant/report"/>
+        <mkdir dir="build.ant/junit"/>
+        <junit haltonerror="false" errorproperty="junit.error">
+            <classpath>
+                <path refid="build.classpath"/>
+                <path path="src/java/main"/>
+                <path path="src/java/test"/>
+                <path path="build.ant/main"/>
+                <path path="build.ant/test"/>
+            </classpath>
+            <formatter type="xml"/>
+            <batchtest fork="yes" todir="build.ant/junit">
+                <fileset dir="src/java/test">
+                    <include name="**/*Test.java"/>
+                    <include name="**/*TestCase.java"/>
+                </fileset>
+            </batchtest>
+        </junit>
+        <mkdir dir="build.ant/report"/>
+        <junitreport todir="build.ant/report">
+            <fileset dir="build.ant/junit">
+                <include name="TEST-*.xml"/>
+            </fileset>
+            <report todir="build.ant/report/html"/>
+        </junitreport>
+        <echo message="Test report in: build.ant/report/html/index.html"/>
+        <fail if="junit.error" message="Tests failed."/>
+    </target>
+
+    <target name="javadoc">
+        <delete dir="build.ant/javadoc"/>
+        <javadoc destdir="build.ant/javadoc">
+            <classpath refid="build.classpath" />
+            <packageset dir="src/java/main" defaultexcludes="yes"/>
+        </javadoc>
+        <echo message="Java documentation now available in build.ant/javadoc/index.html"/>
+    </target>
+
+    <target name="jar" depends="compile">
+        <delete file="mediacompressor.jar"/>
+        <jar destfile="mediacompressor.jar">
+            <manifest>
+                <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
+                <attribute name="Rsrc-Main-Class" value="com.t11e.web.media.MediaCompressorApplication"/>
+                <attribute name="Class-Path" value="."/>
+                <attribute name="Rsrc-Class-Path" value="./ commons-cli-1.2.jar commons-lang-2.4.jar commons-io-1.4.jar snakeyaml-1.5.jar rhino1_6R7-t11e.jar yuicompressor-2.4.2-t11e.jar jslint4java-1.3.3-t11e.jar rhino1_7R1.jar"/>
+            </manifest>
+            <zipfileset src="tools/eclipse-jar-in-jar-loader-1.3.zip"/>
+            <fileset dir="build.ant/main"/>
+            <zipfileset dir="lib">
+                <include name="*.jar"/>
+                <exclude name="*-sources.jar"/>
+                <exclude name="*-src.jar"/>
+                <exclude name="junit-*.jar"/>
+            </zipfileset>
+        </jar>
+    </target>
+
+    <target name="compress-media"
+        description="Lint, concatenate and compress media files as configured in media.yml."
+        depends="jar">
+        <mkdir dir="build.ant/compressed"/>
+        <java jar="mediacompressor.jar" fork="true" failonerror="true">
+            <arg value="--config=media.yml"/>
+        </java>
+    </target>
+</project>
