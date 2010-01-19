@@ -36,7 +36,7 @@ public class MediaCompressorApplication
     if (cmd.hasOption("help"))
     {
       HelpFormatter formatter = new HelpFormatter();
-      formatter.printHelp("MediaCompressorApplication", options, true);
+      formatter.printHelp("MediaCompressorApplication [options] [group...]", options, false);
       resultCode = 1;
     }
     else
