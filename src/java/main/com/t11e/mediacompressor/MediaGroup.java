@@ -1,4 +1,4 @@
-package com.t11e.web.media;
+package com.t11e.mediacompressor;
 
 import java.util.Collections;
 import java.util.List;

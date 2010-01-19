@@ -1,4 +1,4 @@
-package com.t11e.web.media;
+package com.t11e.mediacompressor;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
@@ -7,7 +7,7 @@ import java.io.File;
 
 import org.junit.Test;
 
-import com.t11e.web.media.MediaCompressor;
+import com.t11e.mediacompressor.MediaCompressor;
 
 public class MediaCompressorTestCase
 {

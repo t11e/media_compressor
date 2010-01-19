@@ -1,4 +1,4 @@
-package com.t11e.web.media;
+package com.t11e.mediacompressor;
 
 import static org.junit.Assert.assertEquals;
 
@@ -10,9 +10,9 @@ import junit.framework.Assert;
 import org.junit.Test;
 import org.yaml.snakeyaml.Yaml;
 
-import com.t11e.web.media.IMediaConfiguration;
-import com.t11e.web.media.IMediaGroup;
-import com.t11e.web.media.MediaConfigurationFactory;
+import com.t11e.mediacompressor.IMediaConfiguration;
+import com.t11e.mediacompressor.IMediaGroup;
+import com.t11e.mediacompressor.MediaConfigurationFactory;
 
 public class MediaConfigTestCase
 {
