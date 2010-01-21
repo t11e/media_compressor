@@ -15,12 +15,12 @@
 
     <target name="compile">
         <mkdir dir="build.ant/main"/>
-        <javac destdir="build.ant/main" target="1.6" debug="true">
+        <javac destdir="build.ant/main" target="1.5" debug="true">
             <src path="src/java/main"/>
             <classpath refid="build.classpath"/>
         </javac>
         <mkdir dir="build.ant/test"/>
-        <javac destdir="build.ant/test" target="1.6" debug="true">
+        <javac destdir="build.ant/test" target="1.5" debug="true">
             <src path="src/java/test"/>
             <classpath path="build.ant/main"/>
             <classpath refid="build.classpath"/>
