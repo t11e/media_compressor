@@ -10,7 +10,7 @@ compress both types of files.
 
 Typical use case is to edit media.yml and then run:
 
-    java -jar mediacompressor-1.0.jar media.yml
+    java -jar mediacompressor-app-1.0.jar media.yml
 
 This will write the compressed media files into the output directory
 specified in media.yml.

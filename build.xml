@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project name="Media Compressor" default="jar">
+<project name="Media Compressor" default="application-jar">
     <target name="clean">
         <delete dir="build.ant"/>
         <delete dir="src/web/build"/>
@@ -68,30 +68,44 @@
     </target>
 
     <target name="jar" depends="compile">
-        <delete file="mediacompressor.jar"/>
-        <jar destfile="mediacompressor.jar">
+        <delete file="build.ant/mediacompressor.jar"/>
+        <jar destfile="build.ant/mediacompressor.jar">
+            <fileset dir="build.ant/main"/>
+        </jar>
+    </target>
+
+    <target name="sources-jar">
+        <delete file="build.ant/mediacompressor-sources.jar"/>
+        <jar destfile="build.ant/mediacompressor-sources.jar">
+            <fileset dir="src/java/main"/>
+        </jar>
+    </target>
+
+    <target name="application-jar" depends="jar, sources-jar">
+        <delete file="build.ant/mediacompressor-app.jar"/>
+        <jar destfile="build.ant/mediacompressor-app.jar">
             <manifest>
                 <attribute name="Main-Class" value="org.eclipse.jdt.internal.jarinjarloader.JarRsrcLoader"/>
                 <attribute name="Rsrc-Main-Class" value="com.t11e.mediacompressor.MediaCompressorApplication"/>
                 <attribute name="Class-Path" value="."/>
-                <attribute name="Rsrc-Class-Path" value="./ commons-cli-1.2.jar commons-lang-2.4.jar commons-io-1.4.jar snakeyaml-1.5.jar rhino1_6R7-t11e.jar yuicompressor-2.4.2-t11e.jar jslint4java-1.3.3-t11e.jar rhino1_7R1.jar"/>
+                <attribute name="Rsrc-Class-Path" value="mediacompressor.jar commons-cli-1.2.jar commons-lang-2.4.jar commons-io-1.4.jar snakeyaml-1.5.jar rhino1_6R7-t11e.jar yuicompressor-2.4.2-t11e.jar jslint4java-1.3.3-t11e.jar rhino1_7R1.jar"/>
             </manifest>
             <zipfileset src="tools/eclipse-jar-in-jar-loader-1.3.zip"/>
-            <fileset dir="build.ant/main"/>
-            <zipfileset dir="lib">
+            <fileset file="build.ant/mediacompressor.jar"/>
+            <fileset dir="lib">
                 <include name="*.jar"/>
                 <exclude name="*-sources.jar"/>
                 <exclude name="*-src.jar"/>
                 <exclude name="junit-*.jar"/>
-            </zipfileset>
+            </fileset>
         </jar>
     </target>
 
     <target name="compress-media"
         description="Lint, concatenate and compress media files as configured in media.yml."
-        depends="jar">
+        depends="application-jar">
         <mkdir dir="build.ant/compressed"/>
-        <java jar="mediacompressor.jar" fork="true" failonerror="true">
+        <java jar="build.ant/mediacompressor-app.jar" fork="true" failonerror="true">
             <arg value="--config=media.yml"/>
         </java>
     </target>
